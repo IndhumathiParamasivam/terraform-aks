@@ -18,7 +18,7 @@ resource "azurerm_resource_group" "example-resources" {
 }
 
 resource "azurerm_storage_account" "tfstate" {
-  name                     = "mystorage3797"
+  name                     = "mystorage3797-tfstate"
   resource_group_name      = azurerm_resource_group.example-resources.name
   location                 = azurerm_resource_group.example-resources.location
   account_tier             = "Standard"
