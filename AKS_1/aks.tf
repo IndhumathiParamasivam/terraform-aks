@@ -243,8 +243,11 @@ resource "time_sleep" "wait_for_app_gw" {
 }
 
 data "azurerm_public_ip" "network-1" {
+  metadata {
   name                 = local.public_ip_address_id
   resource_group_name = local.resource_group_name_ag
+  }
+  
   time_sleep = [time_sleep.wait_for_app_gw]
 
 }
