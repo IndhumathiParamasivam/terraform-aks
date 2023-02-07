@@ -40,7 +40,7 @@ jobs:
         uses: actions/upload-artifact@v2.2.2
         with:
         # Artifact name
-          name:  terraform_plan_result #.zip will be added automatically
+          name:  terraform_SAplan_result #.zip will be added automatically
           path: ./storageaccount/SAtfplan
 
   terraform-apply-SA:
@@ -61,8 +61,8 @@ jobs:
       - name: Download the plan artifcats
         uses: actions/download-artifact@v2
         with:
-           name: terraform_plan_result
-           path: "./storageaccount/SAtfplan"
+           name: terraform_SAplan_result
+           path: "./storageaccount"
 
       - name: Terraform Init
         id: init
@@ -128,7 +128,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
            name: terraform_plan_result
-           path: "./AKS_1/tfplan"
+           path: "./AKS_1"
 
       - name: Terraform Init
         id: init
