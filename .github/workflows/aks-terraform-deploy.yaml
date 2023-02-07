@@ -45,7 +45,7 @@ jobs:
 
   terraform-apply-SA:
     name: "Terraform-Apply-SA"
-    needs: [Terraform-plan-SA]
+    needs: [Terraform-Plan-SA]
     environment:
       name: Prod
     runs-on: ubuntu-latest
@@ -79,6 +79,7 @@ jobs:
 
   terraform-plan-aks:
     name: "Terraform-Plan-aks"
+    needs: [Terraform-Apply-SA]
     runs-on: ubuntu-latest
     
     steps:
@@ -110,7 +111,7 @@ jobs:
 
   terraform-apply-aks:
     name: "Terraform-Apply-aks"
-    needs: [Terraform-plan-aks]
+    needs: [Terraform-Plan-aks]
     environment:
       name: Prod
     runs-on: ubuntu-latest
