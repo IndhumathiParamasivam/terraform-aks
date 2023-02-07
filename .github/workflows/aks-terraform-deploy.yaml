@@ -47,18 +47,18 @@ jobs:
             terraform init
         working-directory: "./AKS_1"
 
-      - name: Terraform Plan
-        id: plan
+      #- name: Terraform Plan
+        #id: plan
         #if: github.event_name == 'push'
-        run: terraform plan -out="tfplan"
-        working-directory: "./AKS_1"
+        #run: terraform plan -out="tfplan"
+        #working-directory: "./AKS_1"
 
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v2.2.2
-        with:
+      #- name: Upload a Build Artifact
+        #uses: actions/upload-artifact@v2.2.2
+        #with:
         # Artifact name
-          name:  terraform_plan_result #.zip will be added automatically
-          path: ./AKS_1/tfplan
+          #name:  terraform_plan_result #.zip will be added automatically
+          #path: ./AKS_1/tfplan
 
   terraform-apply-aks:
     name: "Terraform-Apply-aks"
