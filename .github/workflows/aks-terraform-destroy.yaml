@@ -1,0 +1,36 @@
+name : terraform destroy
+
+on:
+  workflow_dispatch:
+env:
+      ARM_CLIENT_ID: ${{ vars.CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ vars.SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ vars.TENANT_ID }}
+
+
+jobs:
+
+  terraform-destroy-aks:
+    name: "Terraform-Plan-aks"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+      
+      - name: Terraform Init
+        id: init
+        run: |
+            #rm -rf .terraform
+            terraform init
+        working-directory: "./AKS_1"
+
+      - name: Terraform destroy
+        id: Destroy
+        #if: github.event_name == 'push'
+        run: terraform destroy --auto-approve
+        working-directory: "./AKS_1"

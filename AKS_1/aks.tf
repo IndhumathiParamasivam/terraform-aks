@@ -236,8 +236,15 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   tags       = var.tags
 }
 
+resource "time_sleep" "wait_for_app_gw" {
+  create_duration = "300s"
+
+  depends_on = [azurerm_kubernetes_cluster.k8s]
+}
+
 data "azurerm_public_ip" "network-1" {
   name                 = local.public_ip_address_id
   resource_group_name = local.resource_group_name_ag
-  depends_on = [azurerm_kubernetes_cluster.k8s]
+  time_sleep = [time_sleep.wait_for_app_gw]
+
 }
