@@ -24,7 +24,6 @@ jobs:
       - name: SSH KEY creation
         run: |
            mkdir .ssh
-           echo $SSH_KEY
            echo "$SSH_KEY" > ./.ssh/id_rsa.pub
            chmod 600 ./.ssh/id_rsa.pub
            ls -la
@@ -32,13 +31,6 @@ jobs:
         working-directory: ./AKS_1
         env:
             SSH_KEY: ${{ secrets.SSH_PUB_KEY }}
-
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v2.2.2
-        with:
-        # Artifact name
-          name:  ssh key #.zip will be added automatically
-          path: ./AKS_1/.ssh/id_rsa.pub
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
@@ -50,18 +42,18 @@ jobs:
             terraform init
         working-directory: "./AKS_1"
 
-      #- name: Terraform Plan
-        #id: plan
+      - name: Terraform Plan
+        id: plan
         #if: github.event_name == 'push'
-        #run: terraform plan -out="tfplan"
-        #working-directory: "./AKS_1"
+        run: terraform plan -out="tfplan"
+        working-directory: "./AKS_1"
 
-      #- name: Upload a Build Artifact
-        #uses: actions/upload-artifact@v2.2.2
-        #with:
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2.2.2
+        with:
         # Artifact name
-          #name:  terraform_plan_result #.zip will be added automatically
-          #path: ./AKS_1/tfplan
+          name:  terraform_plan_result #.zip will be added automatically
+          path: ./AKS_1/tfplan
 
   terraform-apply-aks:
     name: "Terraform-Apply-aks"
@@ -78,9 +70,13 @@ jobs:
       - name: SSH KEY creation
         run: |
            mkdir .ssh
-           echo ${{secrets.SSH_PUB_KEY}} > ./.ssh/id_rsa.pub
+           echo "$SSH_KEY" > ./.ssh/id_rsa.pub
            chmod 600 ./.ssh/id_rsa.pub
+           ls -la
+           ls -la .ssh
         working-directory: ./AKS_1
+        env:
+            SSH_KEY: ${{ secrets.SSH_PUB_KEY }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
