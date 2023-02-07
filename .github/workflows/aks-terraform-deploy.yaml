@@ -12,8 +12,73 @@ env:
 
 jobs:
 
+  terraform-plan-SA:
+    name: "Terraform-Plan-SA"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Init
+        id: init
+        run: |
+            #rm -rf .terraform
+            terraform init
+        working-directory: "./storageaccount"
+
+      - name: Terraform Plan
+        id: plan
+        #if: github.event_name == 'push'
+        run: terraform plan -out="SAtfplan"
+        working-directory: "./storageaccount"
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2.2.2
+        with:
+        # Artifact name
+          name:  terraform_plan_result #.zip will be added automatically
+          path: ./storageaccount/SAtfplan
+
+  terraform-apply-SA:
+    name: "Terraform-Apply-SA"
+    needs: [Terraform-plan-SA]
+    environment:
+      name: Prod
+    runs-on: ubuntu-latest
+
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Download the plan artifcats
+        uses: actions/download-artifact@v2
+        with:
+           name: terraform_plan_result
+           path: "./storageaccount/SAtfplan"
+
+      - name: Terraform Init
+        id: init
+        run: |
+            #rm -rf .terraform
+            terraform init
+        working-directory: "./storageaccount"
+
+      - name: Terraform Apply
+        #if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply "SAtfplan"
+        working-directory: "./storageaccount"
+
+
   terraform-plan-aks:
-    name: "Terraform-Plan-eks"
+    name: "Terraform-Plan-aks"
     runs-on: ubuntu-latest
     
     steps:
