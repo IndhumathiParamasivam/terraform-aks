@@ -9,4 +9,5 @@ resource "azurerm_dns_a_record" "example" {
   resource_group_name = azurerm_resource_group.rg.name
   ttl                 = 60
   target_resource_id  = data.azurerm_public_ip.network-1.id
+  depends_on          = [azurerm_kubernetes_cluster.k8s]
 }

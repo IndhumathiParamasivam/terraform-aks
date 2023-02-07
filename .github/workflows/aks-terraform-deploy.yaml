@@ -55,6 +55,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      
+      - name: SSH KEY creation
+        run: |
+           mkdir .ssh
+           echo ${{secrets.SSH_PUB_KEY}} > id_rsa.pub
+           chmod 600 id_rsa.pub
+        working-directory: ./AKS_1
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
