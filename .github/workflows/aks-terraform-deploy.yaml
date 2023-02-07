@@ -30,6 +30,13 @@ jobs:
            ls -la .ssh
         working-directory: ./AKS_1
 
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2.2.2
+        with:
+        # Artifact name
+          name:  ssh key #.zip will be added automatically
+          path: ./AKS_1/.ssh/id_rsa.pub
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
 
