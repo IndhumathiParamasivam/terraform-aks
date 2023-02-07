@@ -5,10 +5,10 @@ on:
     branches:
       - main
 env:
-      ARM_CLIENT_ID: ${{ var.CLIENT_ID }}
+      ARM_CLIENT_ID: ${{ vars.CLIENT_ID }}
       ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID: ${{ var.SUBSCRIPTION_ID }}
-      ARM_TENANT_ID: ${{ var.TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ vars.SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ vars.TENANT_ID }}
 
 jobs:
 
