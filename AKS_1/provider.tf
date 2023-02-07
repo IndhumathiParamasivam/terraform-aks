@@ -8,7 +8,7 @@ terraform {
     }
   }
   backend "azurerm" {
-    resource_group_name  = "example-resources"
+    resource_group_name  = "sa-resources"
     storage_account_name = "mystorage3797tfstate"
     container_name       = "tfstate"
     key                  = "aks.tfstate"
