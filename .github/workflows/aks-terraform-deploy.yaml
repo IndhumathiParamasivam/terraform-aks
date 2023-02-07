@@ -1,0 +1,77 @@
+name: "terraform-deploy-aks"
+
+on:
+  push:
+    branches:
+      - main
+env:
+      ARM_CLIENT_ID: ${{ var.CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ var.SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ var.TENANT_ID }}
+
+jobs:
+
+  terraform-plan-aks:
+    name: "Terraform-Plan-eks"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Init
+        id: init
+        run: |
+            #rm -rf .terraform
+            terraform init
+        working-directory: "./AKS_1"
+
+      - name: Terraform Plan
+        id: plan
+        #if: github.event_name == 'push'
+        run: terraform plan -out="tfplan"
+        working-directory: "./AKS_1"
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2.2.2
+        with:
+        # Artifact name
+          name:  terraform_plan_result #.zip will be added automatically
+          path: ./AKS_1/tfplan
+
+  terraform-apply-aks:
+    name: "Terraform-Apply-aks"
+    needs: [Terraform-plan-aks]
+    environment:
+      name: Prod
+    runs-on: ubuntu-latest
+
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Download the plan artifcats
+        uses: actions/download-artifact@v2
+        with:
+           name: terraform_plan_result
+           path: "./AKS_1/tfplan"
+
+      - name: Terraform Init
+        id: init
+        run: |
+            #rm -rf .terraform
+            terraform init
+        working-directory: "./AKS_1"
+
+      - name: Terraform Apply
+        #if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply "tfplan"
+        working-directory: "./AKS_1"
